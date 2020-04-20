@@ -11,5 +11,19 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
+# Tool output
+*.csv
+
 # Dependency directories (remove the comment below to include it)
 # vendor/
+.idea/.gitignore
+.idea/dynamo2csv.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+dynamo2csv
+dynamo2csv.go
+go.mod
+go.sum
+out2.csv
+out3.csv
