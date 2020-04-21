@@ -121,11 +121,16 @@ func Scan(ctx context.Context, opt ScanOption, startKey map[string]*dynamodb.Att
 		}
 	}
 
+	var filterExpression *string
+	if opt.FilterExpression != "" {
+		filterExpression = aws.String(opt.FilterExpression)
+	}
+
 	out, err := db.ScanWithContext(ctx, &dynamodb.ScanInput{
 		TableName:                 aws.String(opt.TableName),
 		ExclusiveStartKey:         startKey,
 		ExpressionAttributeNames:  expressionAttributeNames,
-		FilterExpression:          aws.String(opt.FilterExpression),
+		FilterExpression:          filterExpression,
 		ExpressionAttributeValues: expressionAttributeValues,
 	})
 	if err != nil {
