@@ -27,20 +27,12 @@ Filter Expression
 ## Options
 
 ```bash
-./dynamo2csv -h
+$ dynamo2csv --help
 Usage of ./dynamo2csv:
-  -c string
-        -c is DynamoDB Column names
-  -columns string
-        -columns is DynamoDB Column names
-  -expression-attribute-names string
-        Attribute names
-  -expression-attribute-values string
-        Attribute values
-  -filter-expression string
-        Filter Expression
-  -t string
-        -t is DynamoDB Table name that is export target
-  -table string
-        -table is DynamoDB Table name that is export target
+  -c, --columns string                       DynamoDB Column names order for using csv output
+      --expression-attribute-names string    Attribute names
+      --expression-attribute-values string   Attribute values
+      --filter-expression string             Filter Expression
+      --profile string                       AWS Profile Name
+  -t, --table string                         DynamoDB Table name that is export target
 ```
