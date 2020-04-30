@@ -4,21 +4,19 @@ import (
 	"context"
 	"encoding/csv"
 	"encoding/json"
-	"flag"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
+	flag "github.com/spf13/pflag"
 	"log"
 	"os"
 	"sort"
 	"strconv"
 )
 
-var db = dynamodb.New(session.Must(session.NewSessionWithOptions(session.Options{
-	SharedConfigState: session.SharedConfigEnable,
-})))
+var db *dynamodb.DynamoDB
 
 type ScanOption struct {
 	TableName            string
@@ -28,24 +26,31 @@ type ScanOption struct {
 }
 
 func main() {
-	tableName := flag.String("t", "", "-t is DynamoDB Table name that is export target")
-	flag.StringVar(tableName, "table", "", "-table is DynamoDB Table name that is export target")
-
-	columns := flag.String("c", "", "-c is DynamoDB Column names") //TODO options
-	flag.StringVar(columns, "columns", "", "-columns is DynamoDB Column names")
+	var tableName string
+	var columns string
+	flag.StringVarP(&tableName, "table", "t", "", "DynamoDB Table name that is export target")
+	flag.StringVarP(&columns, "columns", "c", "", "DynamoDB Column names order for using csv output")
 
 	filterExpression := flag.String("filter-expression", "", "Filter Expression")
 	expressionAttrNames := flag.String("expression-attribute-names", "", "Attribute names")
 	expressionAttrValues := flag.String("expression-attribute-values", "", "Attribute values")
 
+	var awsProfile string
+	flag.StringVar(&awsProfile, "profile", "", "AWS Profile Name")
+
 	flag.Parse()
 
-	if *tableName == "" {
+	if tableName == "" {
 		log.Fatal("DynamoDB Table is required")
 	}
 
+	db = dynamodb.New(session.Must(session.NewSessionWithOptions(session.Options{
+		SharedConfigState: session.SharedConfigEnable,
+		Profile:           awsProfile,
+	})))
+
 	option := ScanOption{
-		TableName:            *tableName,
+		TableName:            tableName,
 		FilterExpression:     *filterExpression,
 		ExpressionAttrNames:  *expressionAttrNames,
 		ExpressionAttrValues: *expressionAttrValues,
